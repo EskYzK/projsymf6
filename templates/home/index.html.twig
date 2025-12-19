@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Backoffice{% endblock %}
+
+{% block body %}
+    <div class="container mx-auto p-10">
+        <h1 class="text-3xl font-bold mb-4">Bienvenue sur le Backoffice</h1>
+        
+        {% if app.user %}
+            <p class="mb-4">
+                Bonjour, vous êtes connecté en tant que : 
+                <span class="font-semibold text-blue-600">{{ app.user.email }}</span>
+            </p>
+            
+            <a href="{{ path('app_logout') }}" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                Se déconnecter
+            </a>
+        {% else %}
+            <p>Vous n'êtes pas connecté.</p>
+            <a href="{{ path('app_login') }}" class="text-blue-500 underline">Se connecter</a>
+        {% endif %}
+    </div>
+{% endblock %}
