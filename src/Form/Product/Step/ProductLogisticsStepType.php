@@ -4,21 +4,17 @@ namespace App\Form\Product\Step;
 
 use App\Form\Data\ProductFlowDTO;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ProductTypeStepType extends AbstractType
+class ProductLogisticsStepType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('type', ChoiceType::class, [
-            'label' => 'Type de produit',
-            'choices' => [
-                'Produit Physique (Stock, Livraison...)' => 'physique',
-                'Produit Numérique (Licence, Téléchargement...)' => 'numerique',
-            ],
-            'expanded' => true,
+        $builder->add('stock', IntegerType::class, [
+            'label' => 'Quantité en stock',
+            'help' => 'Nombre d\'unités disponibles.'
         ]);
     }
 

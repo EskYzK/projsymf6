@@ -6,8 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProductFlowDTO
 {
-    #[Assert\NotBlank]
-    public ?string $type = null; // 'physique' ou 'numerique'
+    #[Assert\NotBlank(message: "Veuillez choisir un type de produit.")]
+    public ?string $type = null;
 
     #[Assert\NotBlank]
     public ?string $name = null;
@@ -19,7 +19,5 @@ class ProductFlowDTO
     public ?float $price = null;
 
     public ?int $stock = null;
-    public ?string $licenseKey = null;
-    
-    public bool $confirmed = false;
+    public ?string $license = null;
 }

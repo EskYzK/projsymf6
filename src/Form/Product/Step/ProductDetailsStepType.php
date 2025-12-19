@@ -16,7 +16,7 @@ class ProductDetailsStepType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, ['label' => 'Nom du produit'])
-            ->add('description', TextareaType::class, ['required' => false])
+            ->add('description', TextareaType::class, ['label' => 'Description', 'required' => false])
             ->add('price', MoneyType::class, ['label' => 'Prix']);
     }
 

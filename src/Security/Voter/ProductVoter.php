@@ -15,25 +15,20 @@ class ProductVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [self::EDIT, self::DELETE, self::VIEW])
-            && $subject instanceof \App\Entity\Product; // ou null si tu vérifies la création
+            && $subject instanceof \App\Entity\Product;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $user = $token->getUser();
-
         if ($attribute === self::VIEW) {
-            return true; 
+            return true;
         }
 
+        $user = $token->getUser();
         if (!$user instanceof User) {
             return false;
         }
 
-        if (in_array('ROLE_ADMIN', $user->getRoles())) {
-            return true;
-        }
-
-        return false;
+        return in_array('ROLE_ADMIN', $user->getRoles());
     }
 }
