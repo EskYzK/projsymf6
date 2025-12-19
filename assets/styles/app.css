@@ -1,5 +1,72 @@
-@import "tailwindcss";
+/* assets/styles/app.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+/* Notre layout personnalisé */
 body {
-    background-color: white;
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f3f4f6; /* Gris clair */
+}
+
+/* Conteneur global */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* La Sidebar (Barre latérale) */
+.sidebar {
+    width: 260px;
+    background-color: #1f2937; /* Gris foncé */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed; /* Fixée à gauche */
+    height: 100vh;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 20px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-bottom: 1px solid #374151;
+    text-align: center;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0 0;
+}
+
+.sidebar-nav li a {
+    display: block;
+    padding: 15px 25px;
+    color: #d1d5db;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar-nav li a:hover {
+    background-color: #374151;
+    color: white;
+    border-left: 4px solid #3b82f6; /* Bordure bleue au survol */
+}
+
+.sidebar-footer {
+    margin-top: auto;
+    border-top: 1px solid #374151;
+}
+
+/* Le Contenu Principal */
+.main-content {
+    flex: 1;
+    margin-left: 260px; /* Laisse la place à la sidebar */
+    padding: 40px;
+    width: calc(100% - 260px);
 }

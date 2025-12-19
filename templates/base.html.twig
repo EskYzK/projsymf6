@@ -4,63 +4,64 @@
         <meta charset="UTF-8">
         <title>{% block title %}Backoffice{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        
         {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body class="bg-gray-100 font-sans leading-normal tracking-normal">
-
-        <div class="flex flex-col md:flex-row">
-            <div class="bg-gray-800 shadow-xl h-16 fixed bottom-0 md:relative md:h-screen z-10 w-full md:w-64">
-                <div class="md:mt-12 md:w-64 md:fixed md:left-0 md:top-0 content-center md:content-start text-left justify-between">
-                    <ul class="list-reset flex flex-row md:flex-col py-0 md:py-3 px-1 md:px-2 text-center md:text-left">
-                        <li class="mr-3 flex-1">
-                            <a href="{{ path('app_home') }}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-pink-500">
-                                <span class="pb-1 md:pb-0 text-xs md:text-base text-gray-400 md:text-gray-200 block md:inline-block">Tableau de bord</span>
-                            </a>
-                        </li>
-                        
-                        {# Onglet Utilisateurs : Réservé aux Admins #}
-                        {% if is_granted('ROLE_ADMIN') %}
-                        <li class="mr-3 flex-1">
-                            {# On pointe vers app_user_index (que l'on va créer) #}
-                            <a href="{{ path('app_user_index') }}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-purple-500">
-                                <span class="pb-1 md:pb-0 text-xs md:text-base text-gray-400 md:text-gray-200 block md:inline-block">Utilisateurs</span>
-                            </a>
-                        </li>
-                        {% endif %}
-
-                        <li class="mr-3 flex-1">
-                            <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-blue-500">
-                                <span class="pb-1 md:pb-0 text-xs md:text-base text-gray-400 md:text-gray-200 block md:inline-block">Produits</span>
-                            </a>
-                        </li>
-                        <li class="mr-3 flex-1">
-                            <a href="#" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-green-500">
-                                <span class="pb-1 md:pb-0 text-xs md:text-base text-gray-400 md:text-gray-200 block md:inline-block">Clients</span>
-                            </a>
-                        </li>
-                        
-                        <li class="mr-3 flex-1 mt-4 border-t border-gray-700 pt-4">
-                            <a href="{{ path('app_logout') }}" class="block py-1 md:py-3 pl-1 align-middle text-white no-underline hover:text-white border-b-2 border-gray-800 hover:border-red-500">
-                                <span class="pb-1 md:pb-0 text-xs md:text-base text-red-400 block md:inline-block">Déconnexion</span>
-                            </a>
-                        </li>
-                    </ul>
+    <body>
+        
+        <div class="admin-wrapper">
+            <nav class="sidebar">
+                <div class="sidebar-header">
+                    Backoffice
                 </div>
-            </div>
+                
+                <ul class="sidebar-nav">
+                    <li>
+                        <a href="{{ path('app_home') }}">Tableau de bord</a>
+                    </li>
 
-            <div class="main-content flex-1 bg-gray-100 mt-12 md:mt-2 pb-24 md:pb-5">
-                <div class="p-6">
-                    {# Messages Flash #}
-                    {{ include('common/_flash_messages.html.twig') }}
+                    {# Onglet Utilisateurs : Admin seulement #}
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li>
+                        <a href="{{ path('app_user_index') }}">Utilisateurs</a>
+                    </li>
+                    {% endif %}
+
+                    <li>
+                        <a href="#">Produits</a>
+                    </li>
                     
-                    {% block body %}{% endblock %}
-                </div>
-            </div>
+                    <li>
+                        <a href="#">Clients</a>
+                    </li>
+                </ul>
+
+                <ul class="sidebar-nav sidebar-footer">
+                    <li>
+                        <a href="{{ path('app_logout') }}" style="color: #f87171;">Déconnexion</a>
+                    </li>
+                </ul>
+            </nav>
+
+            <main class="main-content">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="mb-4 p-4 rounded text-white 
+                                    {{ label == 'success' ? 'bg-green-500' : 'bg-red-500' }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+
+                {% block body %}{% endblock %}
+            </main>
         </div>
+
     </body>
 </html>
