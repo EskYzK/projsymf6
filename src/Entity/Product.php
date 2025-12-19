@@ -23,6 +23,15 @@ class Product
     #[ORM\Column]
     private ?float $price = null;
 
+    #[ORM\Column(length: 20)]
+    private ?string $type = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $stock = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $licenseKey = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +69,42 @@ class Product
     public function setPrice(float $price): static
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): static
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(?int $stock): static
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getLicenseKey(): ?string
+    {
+        return $this->licenseKey;
+    }
+
+    public function setLicenseKey(?string $licenseKey): static
+    {
+        $this->licenseKey = $licenseKey;
 
         return $this;
     }
