@@ -20,6 +20,7 @@ class ProductLicenseStepType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => ProductFlowDTO::class]);
+        $resolver->setDefaults(['data_class' => ProductFlowDTO::class,'enabled' => true,]);
+        $resolver->setAllowedTypes('enabled', ['bool', 'callable']);
     }
 }

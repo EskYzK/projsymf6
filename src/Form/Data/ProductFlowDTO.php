@@ -6,6 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ProductFlowDTO
 {
+    public string $currentStep = 'category';
+
     #[Assert\NotBlank(message: "Veuillez choisir un type de produit.")]
     public ?string $type = null;
 

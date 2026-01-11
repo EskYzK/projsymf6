@@ -5,38 +5,48 @@
 {% block body %}
     <div class="max-w-2xl mx-auto">
         <h1 class="text-3xl font-bold mb-6">
-            {{ product is defined ? 'Modifier le produit' : 'Nouveau Produit' }}
+            {{ product is defined and product ? 'Modifier le produit' : 'Nouveau Produit' }}
         </h1>
 
         <div class="mb-8">
-            <span class="text-sm font-semibold text-gray-500 uppercase">
-                Étape {{ flow.currentStep }} 
-            </span>
-            <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ (flow.currentStep / 3) * 100 }}%"></div>
+            <div class="flex justify-between mb-1">
+                <span class="text-sm font-semibold text-gray-500 uppercase">
+                    {# On utilise la variable 'currentStep' passée par le contrôleur #}
+                    Étape {{ currentStep }} sur {{ totalSteps }}
+                </span>
+                <span class="text-sm font-semibold text-blue-600">
+                    {{ (currentStep / totalSteps * 100)|round }}%
+                </span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
+                     style="width: {{ (currentStep / totalSteps) * 100 }}%"></div>
             </div>
         </div>
 
         <div class="bg-white p-8 rounded shadow-lg">
             {{ form_start(form) }}
-                
                 {{ form_errors(form) }}
+                
+                {# Affiche les champs de l'étape courante #}
                 {{ form_widget(form) }}
 
                 <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
-                    {% if flow.currentStep > 1 %}
-                        <button type="submit" name="flow_product_transition" value="back" formnovalidate class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50">
+                    {% if currentStep > 1 %}
+                        {# Le value="back" permet de revenir en arrière #}
+                        <button type="submit" name="flow_product_flow_transition" value="back" formnovalidate 
+                                class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition">
                             &larr; Précédent
                         </button>
                     {% else %}
-                        <div></div>
+                        <div></div> {# Espace vide pour garder l'alignement #}
                     {% endif %}
 
-                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold shadow">
-                        {{ flow.currentStep == 3 or flow.currentStep == 2 and form.vars.value.type == 'xxx' ? 'Terminer' : 'Suivant &rarr;' }}
+                    <button type="submit" 
+                            class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 font-bold shadow transition">
+                        {{ currentStep == totalSteps ? 'Terminer' : 'Suivant &rarr;' }}
                     </button>
                 </div>
-
             {{ form_end(form) }}
         </div>
     </div>
