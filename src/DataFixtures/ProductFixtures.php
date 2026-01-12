@@ -22,7 +22,7 @@ class ProductFixtures extends Fixture
                 $product->setStock(mt_rand(0, 100));
             } else {
                 $product->setType('numerique');
-                $product->setLicense('LICENSE-' . strtoupper(uniqid()));
+                $product->setLicenseKey('LICENSE-' . strtoupper(uniqid()));
             }
 
             $manager->persist($product);
