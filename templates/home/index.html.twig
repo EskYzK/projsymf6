@@ -74,12 +74,13 @@
                 {% for client in latestClients %}
                     <li class="py-3 flex justify-between items-center hover:bg-gray-50 px-2 rounded transition">
                         <div>
-                            <span class="font-medium block text-gray-800">{{ client.name }}</span>
+                            <span class="font-medium block text-gray-800">{{ client.firstname }} {{ client.lastname }}</span>
                             <span class="text-sm text-gray-500">{{ client.email }}</span>
                         </div>
-                        {% if client.company %}
+                        
+                        {% if client.phoneNumber %}
                             <span class="text-xs bg-gray-200 text-gray-600 py-1 px-2 rounded">
-                                {{ client.company }}
+                                📞 {{ client.phoneNumber }}
                             </span>
                         {% endif %}
                     </li>

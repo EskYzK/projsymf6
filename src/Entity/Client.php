@@ -32,7 +32,7 @@ class Client
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
-    private ?string $phoneNumber = null;
+    private ?string $phonenumber = null;
 
     #[ORM\Column(type: 'text')]
     private ?string $address = null;
@@ -91,7 +91,7 @@ class Client
         return $this->phonenumber;
     }
 
-    public function setPhone(?string $phonenumber): static
+    public function setPhoneNumber(?string $phonenumber): static
     {
         $this->phonenumber = $phonenumber;
 
@@ -103,7 +103,7 @@ class Client
         return $this->address;
     }
 
-    public function setCompany(?string $address): static
+    public function setAddress(?string $address): static
     {
         $this->address = $address;
 

@@ -13,23 +13,25 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for client in clients %}
             <div class="bg-white p-6 rounded-lg shadow border-l-4 border-green-500">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold">{{ client.name }}</h2>
-                    {% if client.company %}
-                        <span class="text-xs bg-gray-200 text-gray-700 py-1 px-2 rounded">{{ client.company }}</span>
-                    {% endif %}
+                <div class="mb-4">
+                    {# TON CODE ICI #}
+                    <h2 class="text-xl font-bold">{{ client.firstname }} {{ client.lastname }}</h2>
+                    <p class="text-gray-600 mb-1">📧 {{ client.email }}</p>
+                    <p class="text-gray-600 mb-1">📞 {{ client.phoneNumber }}</p>
+                    <p class="text-gray-500 text-sm mb-4">🏠 {{ client.address }}</p>
                 </div>
-                
-                <p class="text-gray-600 mb-1">📧 <a href="mailto:{{ client.email }}" class="hover:underline">{{ client.email }}</a></p>
-                <p class="text-gray-600 mb-4">📞 {{ client.phone|default('Non renseigné') }}</p>
 
                 <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-100">
-                    <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="text-blue-500 hover:text-blue-700">Modifier</a>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
+                        <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="text-blue-500 hover:text-blue-700">Modifier</a>
+                    {% endif %}
                     
-                    <form method="post" action="{{ path('app_client_delete', {'id': client.id}) }}" onsubmit="return confirm('Supprimer ce client ?');">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
-                        <button class="text-red-500 hover:text-red-700">Supprimer</button>
-                    </form>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <form method="post" action="{{ path('app_client_delete', {'id': client.id}) }}" onsubmit="return confirm('Supprimer ce client ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ client.id) }}">
+                            <button class="text-red-500 hover:text-red-700">Supprimer</button>
+                        </form>
+                    {% endif %}
                 </div>
             </div>
         {% else %}

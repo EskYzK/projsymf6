@@ -10,13 +10,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ClientType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('name', null, ['label' => 'Nom du contact'])
-            ->add('company', null, ['label' => 'Entreprise'])
-            ->add('email', null, ['label' => 'Email'])
-            ->add('phone', null, ['label' => 'Téléphone']);
-    }
+{
+    $builder
+        ->add('firstname', null, ['label' => 'Prénom'])
+        ->add('lastname', null, ['label' => 'Nom'])
+        ->add('email', null, ['label' => 'Email'])
+        ->add('phonenumber', null, ['label' => 'Téléphone'])
+        ->add('address', null, ['label' => 'Adresse postale']);
+}
 
     public function configureOptions(OptionsResolver $resolver): void
     {

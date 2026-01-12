@@ -5,12 +5,19 @@
 {% block body %}
     <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-800">Nos Produits</h1>
-        
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_product_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                + Ajouter un produit (Multi-étapes)
+        <div class="flex gap-4">
+            <a href="{{ path('app_product_export') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Exporter CSV
             </a>
-        {% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_product_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    + Ajouter un produit
+                </a>
+            {% endif %}
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
