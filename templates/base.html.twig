@@ -54,12 +54,14 @@
                     </li>
                     {% endif %}
                 </ul>
-
+    
+                {% if app.user %}
                 <ul class="sidebar-nav sidebar-footer">
                     <li>
                         <a href="{{ path('app_logout') }}" style="color: #f87171;">Déconnexion</a>
                     </li>
                 </ul>
+                {% endif %}
             </nav>
 
             <main class="main-content">
