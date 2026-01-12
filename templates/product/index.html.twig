@@ -12,7 +12,8 @@
                 </svg>
                 Exporter CSV
             </a>
-            {% if is_granted('ROLE_ADMIN') %}
+            
+            {% if is_granted('PRODUCT_ADD') %}
                 <a href="{{ path('app_product_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     + Ajouter un produit
                 </a>
@@ -36,21 +37,28 @@
                 <div class="text-sm text-gray-500 mb-4">
                     {% if product.type == 'physique' %}
                         Stock: {{ product.stock }}
+
                     {% else %}
+
                         Licence numérique
                     {% endif %}
+
                 </div>
 
-                {% if is_granted('ROLE_ADMIN') %}
-                    <div class="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
+                <div class="flex justify-end gap-2 mt-4 pt-4 border-t border-gray-100">
+
+                    {% if is_granted('PRODUCT_EDIT', product) %}
                         <a href="{{ path('app_product_edit', {'id': product.id}) }}" class="text-blue-500 hover:underline">Modifier</a>
-                        
+                    {% endif %} 
+
+                    {% if is_granted('PRODUCT_DELETE', product) %}
                         <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Supprimer ?');">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
                             <button class="text-red-500 hover:underline">Supprimer</button>
                         </form>
-                    </div>
-                {% endif %}
+                    {% endif %} 
+
+                </div>
             </div>
         {% else %}
             <p class="text-center col-span-3 text-gray-500">Aucun produit pour le moment.</p>
