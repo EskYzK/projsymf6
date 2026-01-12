@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted
 
 #[Route('/products')]
 class ProductController extends AbstractController
@@ -26,8 +27,8 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_product_new')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+    #[IsGranted('PRODUCT_ADD')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $dto = new ProductFlowDTO();
@@ -49,19 +50,17 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_product_edit')]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('PRODUCT_EDIT', subject: 'product')]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         $dto = new ProductFlowDTO();
-        // Pré-remplissage du DTO...
         $dto->name = $product->getName();
         $dto->description = $product->getDescription();
         $dto->price = $product->getPrice();
         $dto->type = $product->getType();
         $dto->stock = $product->getStock();
         $dto->license = $product->getLicenseKey();
-        // On force l'étape de départ correcte
         $dto->currentStep = 'category'; 
 
         $flow = $this->createForm(ProductFlowType::class, $dto)->handleRequest($request);
@@ -74,26 +73,25 @@ class ProductController extends AbstractController
         }
 
         return $this->render('product/flow.html.twig', [
-            'form' => $flow->getStepForm()->createView(), // IMPORTANT : createView()
+            'form' => $flow->getStepForm()->createView(),
             'currentStep' => $this->getStepNumber($dto->currentStep),
             'totalSteps' => 3,
             'product' => $product
         ]);
     }
 
-    // Méthode utilitaire pour convertir le nom de l'étape en numéro
     private function getStepNumber(string $stepName): int
     {
         return match ($stepName) {
             'category' => 1,
             'details' => 2,
-            'logistics', 'license' => 3, // Ces deux étapes sont la "3ème" position
+            'logistics', 'license' => 3,
             default => 1,
         };
     }
 
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('PRODUCT_DELETE', subject: 'product')]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
