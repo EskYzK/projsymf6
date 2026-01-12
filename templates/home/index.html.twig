@@ -1,22 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenue{% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
     <div class="flex flex-col justify-center items-center min-h-[70vh] text-center">
         
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-32 mb-6">
-        
-        <h1 class="text-4xl font-bold mb-4 text-gray-800">Bienvenue sur BackOffice</h1>
-        
-        <p class="text-xl text-gray-500 mb-8 max-w-2xl">
-            La solution de gestion complète pour vos produits et clients. 
-            Connectez-vous pour accéder à votre espace.
-        </p>
+        {% if app.user %}
+            
+            <div class="bg-white p-10 rounded-xl shadow-lg border border-gray-100 max-w-lg w-full">
+                <div class="mb-6">
+                    <span class="inline-block p-3 rounded-full bg-green-100 text-green-600 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </span>
+                    <h1 class="text-3xl font-bold text-gray-800">Bonjour, {{ app.user.firstname }} !</h1>
+                    <p class="text-gray-500 mt-2">Ravi de vous revoir sur l'espace BackOffice.</p>
+                </div>
 
-        <a href="{{ path('app_login') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition transform hover:scale-105 no-underline">
-            Accéder à l'espace sécurisé
-        </a>
+                <div class="border-t border-gray-200 py-6 text-left">
+                    <h2 class="text-sm uppercase tracking-wide text-gray-400 font-semibold mb-3">Vos informations</h2>
+                    
+                    <div class="mb-3">
+                        <p class="text-xs text-gray-500">Nom complet</p>
+                        <p class="text-lg font-medium text-gray-800">{{ app.user.firstname }} {{ app.user.lastname }}</p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <p class="text-xs text-gray-500">Adresse e-mail</p>
+                        <p class="text-lg font-medium text-gray-800">{{ app.user.email }}</p>
+                    </div>
+
+                    <div>
+                        <p class="text-xs text-gray-500">Rôle</p>
+                        <p class="text-sm font-medium text-blue-600 bg-blue-50 inline-block px-2 py-1 rounded">
+                            {% if 'ROLE_ADMIN' in app.user.roles %}Administrateur
+                            {% elseif 'ROLE_MANAGER' in app.user.roles %}Manager
+                            {% else %}Utilisateur{% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <a href="{{ path('app_logout') }}" class="w-full block text-center bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-4 rounded transition">
+                        Se déconnecter
+                    </a>
+                </div>
+            </div>
+
+        {% else %}
+        
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-32 mb-6">
+            
+            <h1 class="text-4xl font-bold mb-4 text-gray-800">Bienvenue sur BackOffice</h1>
+            
+            <p class="text-xl text-gray-500 mb-8 max-w-2xl">
+                La solution de gestion complète pour vos produits et clients. 
+                Connectez-vous pour accéder à votre espace.
+            </p>
+
+            <a href="{{ path('app_login') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full text-lg shadow-lg transition transform hover:scale-105 no-underline">
+                Accéder à l'espace sécurisé
+            </a>
+
+        {% endif %}
 
     </div>
 {% endblock %}

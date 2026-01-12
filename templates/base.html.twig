@@ -18,19 +18,23 @@
         <div class="admin-wrapper">
             <nav class="sidebar">
                 <div class="sidebar-header">
-                    <a href="{{ path('app_login') }}" class="text-white no-underline hover:text-gray-300">
                         Backoffice
-                    </a>
                 </div>
                 
                 <ul class="sidebar-nav">
                     <li>
-                        <a href="{{ path('app_home') }}">🏠 Accueil Site</a>
+                        <a href="{{ path('app_home') }}">Accueil Site</a>
                     </li>
+
+                    {% if not app.user %}
+                    <li>
+                        <a href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                    {% endif %}
 
                     {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
                     <li>
-                        <a href="{{ path('app_home') }}">Tableau de bord</a>
+                        <a href="{{ path('app_dashboard') }}">Tableau de bord</a>
                     </li>
                     {% endif %}
 
