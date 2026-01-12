@@ -23,6 +23,7 @@ class ClientController extends AbstractController
     }
 
     #[Route('/new', name: 'app_client_new', methods: ['GET', 'POST'])]
+    #[IsGranted('CLIENT_ADD')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $client = new Client();
@@ -45,6 +46,7 @@ class ClientController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_client_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('CLIENT_EDIT', subject: 'client')]
     public function edit(Request $request, Client $client, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ClientType::class, $client);
@@ -64,6 +66,7 @@ class ClientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_client_delete', methods: ['POST'])]
+    #[IsGranted('CLIENT_DELETE', subject: 'client')]
     public function delete(Request $request, Client $client, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
