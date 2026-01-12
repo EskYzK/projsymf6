@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Service\CsvExporter;
 use App\Form\Data\ProductFlowDTO;
 use App\Form\Product\ProductFlowType;
 use App\Repository\ProductRepository;
@@ -118,5 +119,11 @@ class ProductController extends AbstractController
             $product->setLicense($dto->license);
             $product->setStock(null);
         }
+    }
+
+    #[Route('/export/csv', name: 'app_product_export')]
+    public function export(CsvExporter $csvExporter): Response
+    {
+        return $csvExporter->exportProducts();
     }
 }

@@ -4,8 +4,12 @@ namespace App\Entity;
 
 use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert; 
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé par un autre client.')]
+#[ORM\HasLifecycleCallbacks]
 class Client
 {
     #[ORM\Id]
@@ -14,30 +18,58 @@ class Client
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-zA-Z\s]+$/', message: 'Pas de caractères spéciaux')]
+    private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank]
+    #[Assert\Regex('/^[a-zA-Z\s]+$/', message: 'Pas de caractères spéciaux')]
+    private ?string $lastname = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    #[Assert\Email(message: 'Format email invalide')]
     private ?string $email = null;
 
-    #[ORM\Column(length: 20, nullable: true)]
-    private ?string $phone = null;
+    #[ORM\Column(length: 20)]
+    private ?string $phoneNumber = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $company = null;
+    #[ORM\Column(type: 'text')]
+    private ?string $address = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
+    
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getFirstName(): ?string
     {
-        return $this->name;
+        return $this->firstname;
     }
 
-    public function setName(string $name): static
+    public function setFirstName(string $firstname): static
     {
-        $this->name = $name;
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastName(string $lastname): static
+    {
+        $this->lastname = $lastname;
 
         return $this;
     }
@@ -54,26 +86,26 @@ class Client
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getPhoneNumber(): ?string
     {
-        return $this->phone;
+        return $this->phonenumber;
     }
 
-    public function setPhone(?string $phone): static
+    public function setPhone(?string $phonenumber): static
     {
-        $this->phone = $phone;
+        $this->phonenumber = $phonenumber;
 
         return $this;
     }
 
-    public function getCompany(): ?string
+    public function getAddress(): ?string
     {
-        return $this->company;
+        return $this->address;
     }
 
-    public function setCompany(?string $company): static
+    public function setCompany(?string $address): static
     {
-        $this->company = $company;
+        $this->address = $address;
 
         return $this;
     }
