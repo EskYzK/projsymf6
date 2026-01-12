@@ -1,23 +1,92 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - Backoffice{% endblock %}
+{% block title %}Tableau de bord{% endblock %}
 
 {% block body %}
-    <div class="container mx-auto p-10">
-        <h1 class="text-3xl font-bold mb-4">Bienvenue sur le Backoffice</h1>
+    <h1 class="text-3xl font-bold mb-8 text-gray-800">Tableau de bord</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         
-        {% if app.user %}
-            <p class="mb-4">
-                Bonjour, vous êtes connecté en tant que : 
-                <span class="font-semibold text-blue-600">{{ app.user.email }}</span>
-            </p>
-            
-            <a href="{{ path('app_logout') }}" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
-                Se déconnecter
-            </a>
-        {% else %}
-            <p>Vous n'êtes pas connecté.</p>
-            <a href="{{ path('app_login') }}" class="text-blue-500 underline">Se connecter</a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 text-purple-500 mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm font-medium uppercase">Utilisateurs</p>
+                    <p class="text-3xl font-bold text-gray-700">{{ stats.users }}</p>
+                </div>
+            </div>
+            <div class="mt-4 text-sm">
+                <a href="{{ path('app_user_index') }}" class="text-purple-500 hover:text-purple-700">Gérer les accès &rarr;</a>
+            </div>
+        </div>
         {% endif %}
+
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 text-blue-500 mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm font-medium uppercase">Produits</p>
+                    <p class="text-3xl font-bold text-gray-700">{{ stats.products }}</p>
+                </div>
+            </div>
+            <div class="mt-4 text-sm">
+                {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_product_index') }}" class="text-blue-500 hover:text-blue-700">Voir le catalogue &rarr;</a>
+                {% else %}
+                <span class="text-gray-400">Catalogue consultable</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 text-green-500 mr-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="text-gray-500 text-sm font-medium uppercase">Clients</p>
+                    <p class="text-3xl font-bold text-gray-700">{{ stats.clients }}</p>
+                </div>
+            </div>
+            <div class="mt-4 text-sm">
+                <a href="{{ path('app_client_index') }}" class="text-green-500 hover:text-green-700">Gérer les clients &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-100">
+            <h3 class="font-bold text-gray-700">Derniers clients ajoutés</h3>
+        </div>
+        <div class="p-6">
+            <ul class="divide-y divide-gray-100">
+                {% for client in latestClients %}
+                    <li class="py-3 flex justify-between items-center hover:bg-gray-50 px-2 rounded transition">
+                        <div>
+                            <span class="font-medium block text-gray-800">{{ client.name }}</span>
+                            <span class="text-sm text-gray-500">{{ client.email }}</span>
+                        </div>
+                        {% if client.company %}
+                            <span class="text-xs bg-gray-200 text-gray-600 py-1 px-2 rounded">
+                                {{ client.company }}
+                            </span>
+                        {% endif %}
+                    </li>
+                {% else %}
+                    <li class="text-gray-500 italic">Aucun client pour le moment.</li>
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 {% endblock %}
