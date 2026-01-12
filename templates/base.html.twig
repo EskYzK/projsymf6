@@ -18,7 +18,9 @@
         <div class="admin-wrapper">
             <nav class="sidebar">
                 <div class="sidebar-header">
-                    Backoffice
+                    <a href="{{ path('app_login') }}" class="text-white no-underline hover:text-gray-300">
+                        Backoffice
+                    </a>
                 </div>
                 
                 <ul class="sidebar-nav">
@@ -26,7 +28,6 @@
                         <a href="{{ path('app_home') }}">Tableau de bord</a>
                     </li>
 
-                    {# Onglet Utilisateurs : Admin seulement #}
                     {% if is_granted('ROLE_ADMIN') %}
                     <li>
                         <a href="{{ path('app_user_index') }}">Utilisateurs</a>
@@ -37,9 +38,11 @@
                         <a href="{{ path('app_product_index') }}">Produits</a>
                     </li>
                     
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_MANAGER') %}
                     <li>
                         <a href="{{ path('app_client_index') }}">Clients</a>
                     </li>
+                    {% endif %}
                 </ul>
 
                 <ul class="sidebar-nav sidebar-footer">
