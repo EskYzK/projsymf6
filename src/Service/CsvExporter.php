@@ -13,20 +13,26 @@ class CsvExporter
 
     public function exportProducts(): StreamedResponse
     {
-        $products = $this->productRepository->findAllOrderedByPrice();
+        $products = $this->productRepository->findAll();
 
         $response = new StreamedResponse(function () use ($products) {
-            $handle = fopen('php://output', 'w+');
-
+            $handle = fopen('php://output', 'w');
             fputs($handle, "\xEF\xBB\xBF");
-            
-            fputcsv($handle, ['name', 'description', 'price'], ';');
+            fputcsv($handle, ['ID', 'Nom', 'Prix', 'Type & Stock', 'Description'], ';');
 
             foreach ($products as $product) {
+                if ($product->getType() === 'numerique') {
+                    $stockInfo = 'Licence Numérique';
+                } else {
+                    $stockInfo = sprintf('Physique (Stock: %d)', $product->getStock());
+                }
+
                 fputcsv($handle, [
+                    $product->getId(),
                     $product->getName(),
-                    $product->getDescription(),
-                    $product->getPrice()
+                    $product->getPrice(),
+                    $stockInfo,
+                    $product->getDescription()
                 ], ';');
             }
 
