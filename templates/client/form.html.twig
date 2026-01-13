@@ -8,16 +8,19 @@
 
         {{ form_start(form) }}
             <div class="mb-4">
-                {{ form_row(form.name, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
+                {{ form_row(form.firstname, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
             </div>
             <div class="mb-4">
-                {{ form_row(form.company, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
+                {{ form_row(form.lastname, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
             </div>
             <div class="mb-4">
                 {{ form_row(form.email, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
             </div>
             <div class="mb-4">
-                {{ form_row(form.phone, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
+                {{ form_row(form.phonenumber, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
+            </div>
+            <div class="mb-4">
+                {{ form_row(form.address, {'attr': {'class': 'w-full border p-2 rounded'}}) }}
             </div>
 
             <div class="flex justify-between items-center mt-6">

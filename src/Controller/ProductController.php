@@ -111,9 +111,9 @@ class ProductController extends AbstractController
 
         if ($dto->type === 'physique') {
             $product->setStock($dto->stock);
-            $product->setLicense(null);
+            $product->setLicenseKey(null);
         } elseif ($dto->type === 'numerique') {
-            $product->setLicense($dto->license);
+            $product->setLicenseKey($dto->license);
             $product->setStock(null);
         }
     }
