@@ -38,7 +38,7 @@ class ImportProductsCommand extends Command
         $io->title('Importation des produits...');
 
         if (($handle = fopen($file, "r")) !== false) {
-            fgetcsv($handle, 1000, ";"); // Skip header
+            fgetcsv($handle, 1000, ";");
 
             $count = 0;
             while (($data = fgetcsv($handle, 1000, ";")) !== false) {
