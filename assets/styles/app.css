@@ -1,27 +1,31 @@
+/* assets/styles/app.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-
+/* --- CONFIGURATION GLOBALE DARK MODE --- */
 body {
     margin: 0;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background-color: #f3f4f6;
-    color: #1f2937;
+    background-color: #111827; /* Gris très foncé (presque noir) pour le fond global */
+    color: #e5e7eb; /* Texte presque blanc (Gris clair) */
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 }
 
+a { text-decoration: none; color: inherit; }
+
+/* --- LAYOUT --- */
 .admin-wrapper {
     display: flex;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
+/* --- SIDEBAR (Ton menu gauche) --- */
 .sidebar {
     width: 280px;
-    background-color: #111827;
-    color: #9ca3af;
+    background-color: #1f2937; /* Gris foncé (Ta couleur d'origine) */
+    color: #d1d5db;
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -29,7 +33,7 @@ body {
     left: 0;
     top: 0;
     z-index: 50;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #374151; /* Bordure discrète */
 }
 
 .sidebar-header {
@@ -37,89 +41,154 @@ body {
     font-size: 1.1rem;
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid #374151;
     text-align: center;
+    background-color: rgba(0,0,0,0.2);
 }
 
 .sidebar-nav {
     list-style: none;
-    padding: 1rem 1rem;
+    padding: 1rem;
     margin: 0;
     flex: 1;
     overflow-y: auto;
 }
 
-.sidebar-nav li {
-    margin-bottom: 0.5rem;
-}
+.sidebar-nav li { margin-bottom: 0.5rem; }
 
 .sidebar-nav li a {
     display: flex;
     align-items: center;
     padding: 0.75rem 1rem;
     border-radius: 0.5rem;
-    color: #d1d5db;
-    text-decoration: none;
+    color: #9ca3af;
     font-weight: 500;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s;
 }
 
-
 .sidebar-nav li a:hover {
-    background-color: #374151;
+    background-color: #374151; /* Gris plus clair au survol */
     color: #ffffff;
     transform: translateX(4px);
 }
 
-
-.sidebar-nav li a.active {
-    background-color: #2563eb;
-    color: white;
-}
-
 .sidebar-footer {
     padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    background-color: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid #374151;
 }
 
-.sidebar-footer a {
-    display: block;
-    text-align: center;
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    background-color: rgba(220, 38, 38, 0.1);
-    color: #f87171 !important;
-    font-weight: 600;
-    transition: background 0.2s;
-}
-
-.sidebar-footer a:hover {
-    background-color: rgba(220, 38, 38, 0.2);
-    text-decoration: none;
-}
-
-
+/* --- CONTENU PRINCIPAL --- */
 .main-content {
     flex: 1;
     margin-left: 280px;
-    padding: 2.5rem;
+    padding: 3rem;
     width: calc(100% - 280px);
-    background-color: #f9fafb;
-    min-height: 100vh;
+    background-color: #111827; /* Fond noir profond */
 }
 
+/* --- FORCAGE DU THEME SOMBRE (Dark Mode Override) --- */
+/* On force tous les éléments blancs à devenir gris foncé */
+.bg-white, .card, .main-content table {
+    background-color: #1f2937 !important; /* Même couleur que la sidebar */
+    color: #f3f4f6 !important;
+    border: 1px solid #374151 !important;
+    box-shadow: none !important;
+}
 
-.sidebar-nav::-webkit-scrollbar {
-    width: 6px;
+/* Textes qui étaient noirs deviennent blancs */
+.text-gray-900, .text-gray-800, .text-gray-700 {
+    color: #f3f4f6 !important;
 }
-.sidebar-nav::-webkit-scrollbar-track {
-    background: transparent;
+
+.text-gray-500, .text-gray-600 {
+    color: #9ca3af !important; /* Gris moyen devient gris clair */
 }
-.sidebar-nav::-webkit-scrollbar-thumb {
-    background-color: #4b5563;
-    border-radius: 20px;
+
+/* --- STYLES DES TITRES --- */
+.main-content h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 2rem;
 }
+
+.main-content h2 {
+    font-size: 1.5rem;
+    color: #e5e7eb;
+    margin-bottom: 1rem;
+}
+
+/* --- TABLEAUX DARK --- */
+.main-content table {
+    width: 100%;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.main-content thead {
+    background-color: #374151 !important; /* Entête plus claire */
+}
+
+.main-content th {
+    text-align: left;
+    padding: 1rem;
+    color: #ffffff !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid #4b5563;
+}
+
+.main-content td {
+    padding: 1rem;
+    border-bottom: 1px solid #374151;
+    color: #d1d5db;
+}
+
+.main-content tbody tr:hover {
+    background-color: #374151 !important; /* Survol ligne tableau */
+}
+
+/* --- FORMULAIRES & INPUTS --- */
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #111827 !important; /* Fond noir pour les champs */
+    border: 1px solid #4b5563 !important;
+    color: #ffffff !important;
+    border-radius: 0.5rem;
+    outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: #3b82f6 !important; /* Bordure bleue au focus */
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+label {
+    color: #d1d5db !important;
+    margin-bottom: 0.5rem;
+    display: block;
+    font-weight: 600;
+}
+
+/* --- BOUTONS --- */
+/* On harmonise les boutons pour qu'ils ressortent bien sur le noir */
+.btn-primary, .bg-blue-600 {
+    background-color: #2563eb !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-primary:hover, .bg-blue-600:hover {
+    background-color: #3b82f6 !important;
+}
+
+/* Scrollbar sombre pour Webkit */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #111827; }
+::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #6b7280; }
