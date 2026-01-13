@@ -1,11 +1,8 @@
-{% extends 'base.html.twig' %}
+<div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+    Étape <span class="text-blue-600 dark:text-blue-400">{{ currentStep }}</span> sur {{ totalSteps }}
+</div>
 
-{% block body %}
-    <h2 class="fw-bold">Basic</h2>
-    <div class="w-50">
-
-        {{ form(form) }}
-
-        Step {{ form.vars.cursor.stepIndex + 1 }} of {{ form.vars.cursor.totalSteps }}
-    </div>
-{% endblock %}
+<div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-6">
+    <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
+         style="width: {{ (currentStep / totalSteps) * 100 }}%"></div>
+</div>

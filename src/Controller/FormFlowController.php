@@ -20,7 +20,6 @@ class FormFlowController extends AbstractController
             ->handleRequest($request);
 
         if ($flow->isSubmitted() && $flow->isValid() && $flow->isFinished()) {
-            // do something with $flow->getData();
 
             $this->addFlash('success', 'Your form flow was successfully finished!');
 
@@ -28,7 +27,9 @@ class FormFlowController extends AbstractController
         }
 
         return $this->render('form_flow/basic.html.twig', [
-            'form' => $flow->getStepForm(),
+            'form' => $form->createView(),
+            'currentStep' => $step,
+            'totalSteps' => 4,
         ]);
     }
 }
