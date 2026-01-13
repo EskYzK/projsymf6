@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier l'utilisateur{% endblock %}
+
+{% block body %}
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800 dark:text-white">Modifier un utilisateur</h1>
+
+        <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl px-8 pt-6 pb-8 mb-4 border border-gray-100 dark:border-gray-700">
+            {{ form_start(form) }}
+                
+                <div class="mb-4">
+                    {{ form_label(form.firstname, 'Prénom', {'label_attr': {'class': 'block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2'}}) }}
+                    {{ form_widget(form.firstname, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500'}}) }}
+                    {{ form_errors(form.firstname) }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form_label(form.lastname, 'Nom', {'label_attr': {'class': 'block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2'}}) }}
+                    {{ form_widget(form.lastname, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500'}}) }}
+                    {{ form_errors(form.lastname) }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form_label(form.email, 'Adresse Email', {'label_attr': {'class': 'block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2'}}) }}
+                    {{ form_widget(form.email, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500'}}) }}
+                    {{ form_errors(form.email) }}
+                </div>
+                
+                {# Le mot de passe n'apparaît pas ici car UserType le masque en mode édition (isEdit) #}
+
+                <div class="mb-6">
+                    <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">Rôles</label>
+                    <div class="flex flex-wrap gap-4 p-4 border border-gray-200 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-900">
+                        {% for child in form.roles %}
+                            <div class="flex items-center">
+                                {{ form_widget(child, {'attr': {'class': 'w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'}}) }}
+                                {{ form_label(child, null, {'label_attr': {'class': 'ml-2 text-sm font-medium text-gray-700 dark:text-gray-300'}}) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-8 pt-4 border-t border-gray-100 dark:border-gray-700">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition transform hover:-translate-y-0.5 shadow-lg flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                        </svg>
+                        Mettre à jour
+                    </button>
+                    
+                    <a href="{{ path('app_user_index') }}" class="inline-block align-baseline font-bold text-sm text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white transition">
+                        Annuler
+                    </a>
+                </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

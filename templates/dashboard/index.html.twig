@@ -10,7 +10,6 @@
         </div>
     </div>
 
-    {# --- CARTES DE STATISTIQUES --- #}
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         
         {% if is_granted('ROLE_ADMIN') %}
@@ -97,9 +96,6 @@
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
-                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-md mr-6">
-                                        {{ client.firstname|first|upper }} {{ client.lastname|first|upper }}
-                                    </div>
                                     <div>
                                         <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-500 transition-colors">
                                             {{ client.firstname }} {{ client.lastname }}

@@ -4,56 +4,75 @@
 
 {% block body %}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800">Utilisateurs</h1>
-        <a href="{{ path('app_user_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-        + Nouvel Utilisateur
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Utilisateurs</h1>
+        <a href="{{ path('app_user_new') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" style="width:1.25rem; height:1.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+            </svg>
+            Nouvel Utilisateur
         </a>
     </div>
 
-    <div class="bg-white shadow-md rounded my-6 overflow-x-auto">
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700">
         <table class="min-w-full w-full table-auto">
             <thead>
-                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <tr class="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 uppercase text-xs leading-normal font-bold tracking-wider">
+                    <th class="py-3 px-6 text-left">Identité</th>
                     <th class="py-3 px-6 text-left">Email</th>
-                    <th class="py-3 px-6 text-left">Nom Complet</th>
                     <th class="py-3 px-6 text-center">Rôles</th>
-                    <th class="py-3 px-6 text-center">Actions</th>
+                    <th class="py-3 px-6 text-right">Actions</th>
                 </tr>
             </thead>
-            <tbody class="text-gray-600 text-sm font-light">
+            <tbody class="text-gray-600 dark:text-gray-300 text-sm font-light">
                 {% for user in users %}
-                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        
                         <td class="py-3 px-6 text-left whitespace-nowrap">
-                            <span class="font-medium">{{ user.email }}</span>
+                            <div class="flex items-center">
+                                <span class="font-bold text-gray-800 dark:text-white">{{ user.firstname }} {{ user.lastname }}</span>
+                            </div>
                         </td>
+
                         <td class="py-3 px-6 text-left">
-                            {{ user.firstname }} {{ user.lastname }}
+                            {{ user.email }}
                         </td>
+
                         <td class="py-3 px-6 text-center">
                             {% for role in user.roles %}
-                                <span class="bg-purple-200 text-purple-600 py-1 px-3 rounded-full text-xs">
-                                    {{ role == 'ROLE_USER' ? 'User' : (role == 'ROLE_ADMIN' ? 'Admin' : role) }}
+                                <span class="inline-block py-1 px-3 rounded-full text-xs font-bold
+                                    {{ role == 'ROLE_ADMIN' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300' : 
+                                      (role == 'ROLE_MANAGER' ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300' : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400') }}">
+                                    {{ role == 'ROLE_USER' ? 'Utilisateur' : (role == 'ROLE_ADMIN' ? 'Admin' : 'Manager') }}
                                 </span>
                             {% endfor %}
                         </td>
-                        <td class="py-3 px-6 text-center">
-                            <div class="flex item-center justify-center">
-                                <a href="#" class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+
+                        <td class="py-3 px-6">
+                            <div class="flex item-center justify-end gap-2">
+                                <a href="{{ path('app_user_edit', {'id': user.id}) }}" 
+                                   class="flex items-center px-3 py-1.5 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-200 hover:translate-x-1 font-medium no-underline"
+                                   title="Modifier">
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="width:1rem; height:1rem; margin-right:0.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                                     </svg>
+                                    <span class="hidden md:inline">Edit</span>
                                 </a>
-                                <a href="#" class="w-4 mr-2 transform hover:text-red-500 hover:scale-110">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                    </svg>
-                                </a>
+
+                                <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');" style="margin:0;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                    <button class="flex items-center px-3 py-1.5 rounded-lg text-red-400 hover:bg-gray-700 hover:text-red-200 transition-all duration-200 hover:translate-x-1 font-medium border-none bg-transparent cursor-pointer" title="Supprimer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" style="width:1rem; height:1rem; margin-right:0.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                        <span class="hidden md:inline">Suppr.</span>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="4" class="text-center py-4">Aucun utilisateur trouvé</td>
+                        <td colspan="4" class="text-center py-10 text-gray-500 italic">Aucun utilisateur trouvé</td>
                     </tr>
                 {% endfor %}
             </tbody>
