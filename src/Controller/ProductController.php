@@ -31,20 +31,33 @@ class ProductController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $dto = new ProductFlowDTO();
+        $dto->currentStep = 'category'; 
+
         $flow = $this->createForm(ProductFlowType::class, $dto)->handleRequest($request);
 
-        if ($flow->isSubmitted() && $flow->isValid() && $flow->isFinished()) {
-            $product = new Product();
-            $this->mapDtoToEntity($dto, $product);
-            $entityManager->persist($product);
-            $entityManager->flush();
-            $this->addFlash('success', 'Produit créé avec succès !');
-            return $this->redirectToRoute('app_product_index');
+        if ($flow->isSubmitted() && $flow->isValid()) {
+            if ($dto->type === 'numerique' && $dto->currentStep === 'logistics') {
+                $dto->currentStep = 'license';
+                $flow = $this->createForm(ProductFlowType::class, $dto);
+            }
+            elseif ($dto->type === 'physique' && $dto->currentStep === 'license') {
+                 $dto->currentStep = 'logistics';
+                 $flow = $this->createForm(ProductFlowType::class, $dto);
+            }
+
+            if ($flow->isFinished()) {
+                $product = new Product();
+                $this->mapDtoToEntity($dto, $product);
+                $entityManager->persist($product);
+                $entityManager->flush();
+                $this->addFlash('success', 'Produit créé avec succès !');
+                return $this->redirectToRoute('app_product_index');
+            }
         }
 
         return $this->render('product/flow.html.twig', [
-            'form' => $flow->getStepForm()->createView(), // IMPORTANT : createView()
-            'currentStep' => $this->getStepNumber($dto->currentStep), // On passe le numéro calculé
+            'form' => $flow->getStepForm()->createView(),
+            'currentStep' => $this->getStepNumber($dto->currentStep),
             'totalSteps' => 3,
         ]);
     }
@@ -60,15 +73,28 @@ class ProductController extends AbstractController
         $dto->type = $product->getType();
         $dto->stock = $product->getStock();
         $dto->license = $product->getLicenseKey();
-        $dto->currentStep = 'category'; 
+        
+        if (!$request->isMethod('POST')) {
+            $dto->currentStep = 'category';
+        }
 
         $flow = $this->createForm(ProductFlowType::class, $dto)->handleRequest($request);
 
-        if ($flow->isSubmitted() && $flow->isValid() && $flow->isFinished()) {
-            $this->mapDtoToEntity($dto, $product);
-            $entityManager->flush();
-            $this->addFlash('success', 'Produit modifié avec succès !');
-            return $this->redirectToRoute('app_product_index');
+        if ($flow->isSubmitted() && $flow->isValid()) {
+            if ($dto->type === 'numerique' && $dto->currentStep === 'logistics') {
+                $dto->currentStep = 'license';
+                $flow = $this->createForm(ProductFlowType::class, $dto);
+            } elseif ($dto->type === 'physique' && $dto->currentStep === 'license') {
+                 $dto->currentStep = 'logistics';
+                 $flow = $this->createForm(ProductFlowType::class, $dto);
+            }
+
+            if ($flow->isFinished()) {
+                $this->mapDtoToEntity($dto, $product);
+                $entityManager->flush();
+                $this->addFlash('success', 'Produit modifié avec succès !');
+                return $this->redirectToRoute('app_product_index');
+            }
         }
 
         return $this->render('product/flow.html.twig', [
