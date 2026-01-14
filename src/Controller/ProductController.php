@@ -27,72 +27,173 @@ class ProductController extends AbstractController
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[IsGranted('PRODUCT_ADD', subject: 'product')]
+    public function create(Request $request, SessionInterface $session, EntityManagerInterface $em): Response
     {
-        $dto = new ProductFlowDTO();
+        $step = $request->query->getInt('step', 1);
         
-        $flow = $this->createForm(ProductFlowType::class, $dto);
-        $flow->handleRequest($request);
-        if ($dto->type === 'physique' && $flow->getStepForm()->getName() === 'license') {
-        }
+        $data = $session->get('product_creation_data', []);
 
-        if ($flow->isSubmitted() && $flow->isValid() && $flow->isFinished()) {
-            $product = new Product();
-            $this->mapDtoToEntity($dto, $product);
-            $entityManager->persist($product);
-            $entityManager->flush();
+        if ($step === 1) {
+            $form = $this->createForm(ProductStep1Type::class, $data);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $session->set('product_creation_data', array_merge($data, $form->getData()));
+                return $this->redirectToRoute('app_product_new', ['step' => 2]);
+            }
             
-            return $this->redirectToRoute('app_product_index');
+            return $this->render('product/new_step.html.twig', [
+                'form' => $form->createView(),
+                'step' => 1,
+                'total_steps' => 3
+            ]);
         }
 
-        return $this->render('product/flow.html.twig', [
-            'form' => $flow->getStepForm()->createView(),
-            'currentStep' => $this->getStepNumber($dto->currentStep), 
-            'totalSteps' => 3,
-        ]);
+        if ($step === 2) {
+            $form = $this->createForm(ProductStep2Type::class, $data);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $session->set('product_creation_data', array_merge($data, $form->getData()));
+                return $this->redirectToRoute('app_product_new', ['step' => 3]);
+            }
+
+            return $this->render('product/new_step.html.twig', [
+                'form' => $form->createView(),
+                'step' => 2,
+                'total_steps' => 3
+            ]);
+        }
+
+        if ($step === 3) {
+            $isPhysical = ($data['type'] ?? 'physique') === 'physique';
+
+            $form = $this->createForm(ProductStep3Type::class, $data, [
+                'is_physical' => $isPhysical
+            ]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $finalData = array_merge($data, $form->getData());
+                
+                $product = new Product();
+                $product->setName($finalData['name']);
+                $product->setDescription($finalData['description']);
+                $product->setPrice($finalData['price']);
+                $product->setType($finalData['type']);
+                
+                if ($isPhysical) {
+                    $product->setStock($finalData['stock']);
+                } else {
+                    $product->setLicenseKey($finalData['licenseKey']);
+                }
+
+                $em->persist($product);
+                $em->flush();
+
+                $session->remove('product_creation_data');
+                $this->addFlash('success', 'Produit créé avec succès !');
+
+                return $this->redirectToRoute('app_product_index');
+            }
+
+            return $this->render('product/new_step.html.twig', [
+                'form' => $form->createView(),
+                'step' => 3,
+                'total_steps' => 3
+            ]);
+        }
+
+        return $this->redirectToRoute('app_product_new', ['step' => 1]);
     }
 
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
     #[IsGranted('PRODUCT_EDIT', subject: 'product')]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Product $product, SessionInterface $session, EntityManagerInterface $em): Response
     {
-        $dto = new ProductFlowDTO();
-        $dto->name = $product->getName();
-        $dto->description = $product->getDescription();
-        $dto->price = $product->getPrice();
-        $dto->type = $product->getType();
-        $dto->stock = $product->getStock();
-        $dto->license = $product->getLicenseKey();
+        // 1. Étape actuell
+        $step = $request->query->getInt('step', 1);
         
-        if (!$request->isMethod('POST')) {
-            $dto->currentStep = 'category';
+        $sessionKey = 'product_edit_' . $product->getId();
+        
+        $data = $session->get($sessionKey, []);
+        
+        if (empty($data)) {
+            $data = [
+                'type' => $product->getType(),
+                'name' => $product->getName(),
+                'description' => $product->getDescription(),
+                'price' => $product->getPrice(),
+                'stock' => $product->getStock(),
+                'licenseKey' => $product->getLicenseKey(),
+            ];
+            $session->set($sessionKey, $data);
         }
 
-        $flow = $this->createForm(ProductFlowType::class, $dto)->handleRequest($request);
+        if ($step === 1) {
+            $form = $this->createForm(ProductStep1Type::class, $data);
+            $form->handleRequest($request);
 
-        if ($flow->isSubmitted() && $flow->isValid()) {
-            if ($dto->type === 'numerique' && $dto->currentStep === 'logistics') {
-                $dto->currentStep = 'license';
-                $flow = $this->createForm(ProductFlowType::class, $dto);
-            } elseif ($dto->type === 'physique' && $dto->currentStep === 'license') {
-                 $dto->currentStep = 'logistics';
-                 $flow = $this->createForm(ProductFlowType::class, $dto);
+            if ($form->isSubmitted() && $form->isValid()) {
+                $session->set($sessionKey, array_merge($data, $form->getData()));
+                return $this->redirectToRoute('app_product_edit', ['id' => $product->getId(), 'step' => 2]);
+            }
+            
+            return $this->render('product/edit_step.html.twig', [
+                'form' => $form->createView(), 'step' => 1, 'total_steps' => 3, 'product' => $product
+            ]);
+        }
+
+        if ($step === 2) {
+            $form = $this->createForm(ProductStep2Type::class, $data);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $session->set($sessionKey, array_merge($data, $form->getData()));
+                return $this->redirectToRoute('app_product_edit', ['id' => $product->getId(), 'step' => 3]);
             }
 
-            if ($flow->isFinished()) {
-                $this->mapDtoToEntity($dto, $product);
-                $entityManager->flush();
+            return $this->render('product/edit_step.html.twig', [
+                'form' => $form->createView(), 'step' => 2, 'total_steps' => 3, 'product' => $product
+            ]);
+        }
+
+        if ($step === 3) {
+            $isPhysical = ($data['type'] ?? 'physique') === 'physique';
+            $form = $this->createForm(ProductStep3Type::class, $data, ['is_physical' => $isPhysical]);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                $finalData = array_merge($data, $form->getData());
+
+                $product->setType($finalData['type']);
+                $product->setName($finalData['name']);
+                $product->setDescription($finalData['description']);
+                $product->setPrice($finalData['price']);
+
+                if ($finalData['type'] === 'physique') {
+                    $product->setStock($finalData['stock']);
+                    $product->setLicenseKey(null);
+                } else {
+                    $product->setStock(null);
+                    $product->setLicenseKey($finalData['licenseKey']);
+                }
+
+                $em->flush();
+                
+                $session->remove($sessionKey);
                 $this->addFlash('success', 'Produit modifié avec succès !');
+
                 return $this->redirectToRoute('app_product_index');
             }
+
+            return $this->render('product/edit_step.html.twig', [
+                'form' => $form->createView(), 'step' => 3, 'total_steps' => 3, 'product' => $product
+            ]);
         }
 
-        return $this->render('product/flow.html.twig', [
-            'form' => $flow->getStepForm()->createView(),
-            'currentStep' => $this->getStepNumber($dto->currentStep),
-            'totalSteps' => 3,
-            'product' => $product
-        ]);
+        return $this->redirectToRoute('app_product_edit', ['id' => $product->getId(), 'step' => 1]);
     }
 
     private function getStepNumber(string $stepName): int

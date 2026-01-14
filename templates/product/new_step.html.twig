@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Création Produit - Étape {{ step }}{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto mt-10">
+    
+    {# Barre de progression #}
+    <div class="mb-8">
+        <div class="flex justify-between text-sm font-medium text-gray-500 mb-2">
+            <span>Étape {{ step }} sur {{ total_steps }}</span>
+            <span>{{ (step / total_steps * 100)|round }}%</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: {{ (step / total_steps * 100) }}%"></div>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            {% if step == 1 %}Choisissez le type{% endif %}
+            {% if step == 2 %}Détails du produit{% endif %}
+            {% if step == 3 %}Finalisation{% endif %}
+        </h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            
+            <div class="mt-8 flex justify-between">
+                {% if step > 1 %}
+                    <a href="{{ path('app_product_new', {step: step - 1}) }}" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">
+                        &larr; Retour
+                    </a>
+                {% else %}
+                    <div></div> {# Espace vide pour aligner le bouton Suivant à droite #}
+                {% endif %}
+
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 shadow-md transform hover:-translate-y-0.5 transition">
+                    {{ step == 3 ? 'Créer le produit ✅' : 'Suivant &rarr;' }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Produit - Étape {{ step }}{% endblock %}
+
+{% block body %}
+<div class="max-w-2xl mx-auto mt-10">
+    
+    {# En-tête avec progression #}
+    <div class="mb-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wide">
+                Modification : {{ product.name }}
+            </h2>
+            <span class="text-sm font-medium text-blue-600">Étape {{ step }} / {{ total_steps }}</span>
+        </div>
+        <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+            <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: {{ (step / total_steps * 100) }}%"></div>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800 dark:text-white">
+            {% if step == 1 %}Type de produit{% endif %}
+            {% if step == 2 %}Informations générales{% endif %}
+            {% if step == 3 %}Stock & Livraison{% endif %}
+        </h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            
+            <div class="mt-8 flex justify-between items-center">
+                {# Bouton Retour #}
+                {% if step > 1 %}
+                    <a href="{{ path('app_product_edit', {id: product.id, step: step - 1}) }}" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200 transition">
+                        &larr; Retour
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_product_index') }}" class="text-sm text-gray-500 hover:text-red-500">Annuler</a>
+                {% endif %}
+
+                {# Bouton Suivant / Valider #}
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white font-bold rounded hover:bg-blue-700 shadow-md transform hover:-translate-y-0.5 transition">
+                    {{ step == 3 ? 'Sauvegarder ✅' : 'Suivant &rarr;' }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+</div>
+{% endblock %}
