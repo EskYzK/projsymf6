@@ -17,25 +17,25 @@ class ProductFlowType extends AbstractFlowType
     public function buildFormFlow(FormFlowBuilderInterface $builder, array $options): void
     {
         $builder
-            // ÉTAPE 1 : On ajoute inherit_data => true
             ->addStep('category', ProductTypeStepType::class, [
                 'inherit_data' => true,
             ])
             
-            // ÉTAPE 2 : Pareil ici
             ->addStep('details', ProductDetailsStepType::class, [
                 'inherit_data' => true,
             ])
             
-            // ÉTAPE 3 (Conditionnelle) : Pareil ici
             ->addStep('logistics', ProductLogisticsStepType::class, [
-                'enabled' => fn (ProductFlowDTO $dto) => $dto->type === 'physique',
+                'enabled' => function (ProductFlowDTO $dto) {
+                    return $dto->type === 'physique';
+                },
                 'inherit_data' => true,
             ])
             
-            // ÉTAPE 4 (Conditionnelle) : Pareil ici
             ->addStep('license', ProductLicenseStepType::class, [
-                'enabled' => fn (ProductFlowDTO $dto) => $dto->type === 'numerique',
+                'enabled' => function (ProductFlowDTO $dto) {
+                    return $dto->type === 'numerique';
+                },
                 'inherit_data' => true,
             ]);
 
@@ -46,7 +46,7 @@ class ProductFlowType extends AbstractFlowType
     {
         $resolver->setDefaults([
             'data_class' => ProductFlowDTO::class,
-            'step_property_path' => 'currentStep',
+            'step_property_path' => 'currentStep', 
         ]);
     }
 }

@@ -27,37 +27,27 @@ class ProductController extends AbstractController
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    #[IsGranted('PRODUCT_ADD')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $dto = new ProductFlowDTO();
-        $dto->currentStep = 'category'; 
+        
+        $flow = $this->createForm(ProductFlowType::class, $dto);
+        $flow->handleRequest($request);
+        if ($dto->type === 'physique' && $flow->getStepForm()->getName() === 'license') {
+        }
 
-        $flow = $this->createForm(ProductFlowType::class, $dto)->handleRequest($request);
-
-        if ($flow->isSubmitted() && $flow->isValid()) {
-            if ($dto->type === 'numerique' && $dto->currentStep === 'logistics') {
-                $dto->currentStep = 'license';
-                $flow = $this->createForm(ProductFlowType::class, $dto);
-            }
-            elseif ($dto->type === 'physique' && $dto->currentStep === 'license') {
-                 $dto->currentStep = 'logistics';
-                 $flow = $this->createForm(ProductFlowType::class, $dto);
-            }
-
-            if ($flow->isFinished()) {
-                $product = new Product();
-                $this->mapDtoToEntity($dto, $product);
-                $entityManager->persist($product);
-                $entityManager->flush();
-                $this->addFlash('success', 'Produit créé avec succès !');
-                return $this->redirectToRoute('app_product_index');
-            }
+        if ($flow->isSubmitted() && $flow->isValid() && $flow->isFinished()) {
+            $product = new Product();
+            $this->mapDtoToEntity($dto, $product);
+            $entityManager->persist($product);
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('app_product_index');
         }
 
         return $this->render('product/flow.html.twig', [
             'form' => $flow->getStepForm()->createView(),
-            'currentStep' => $this->getStepNumber($dto->currentStep),
+            'currentStep' => $this->getStepNumber($dto->currentStep), 
             'totalSteps' => 3,
         ]);
     }
