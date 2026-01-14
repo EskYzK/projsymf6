@@ -4,6 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Service\CsvExporter;
+use App\Form\Product\ProductStep1Type;
+use App\Form\Product\ProductStep2Type;
+use App\Form\Product\ProductStep3Type;
 use App\Form\Data\ProductFlowDTO;
 use App\Form\Product\ProductFlowType;
 use App\Repository\ProductRepository;
@@ -14,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 #[Route('/products')]
 class ProductController extends AbstractController
@@ -22,12 +26,12 @@ class ProductController extends AbstractController
     public function index(ProductRepository $productRepository): Response
     {
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAllOrderedByPrice(),
+            'products' => $productRepository->findAll(),
         ]);
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    #[IsGranted('PRODUCT_ADD', subject: 'product')]
+    #[IsGranted('PRODUCT_ADD')]
     public function create(Request $request, SessionInterface $session, EntityManagerInterface $em): Response
     {
         $step = $request->query->getInt('step', 1);
@@ -112,7 +116,6 @@ class ProductController extends AbstractController
     #[IsGranted('PRODUCT_EDIT', subject: 'product')]
     public function edit(Request $request, Product $product, SessionInterface $session, EntityManagerInterface $em): Response
     {
-        // 1. Étape actuell
         $step = $request->query->getInt('step', 1);
         
         $sessionKey = 'product_edit_' . $product->getId();
@@ -208,11 +211,11 @@ class ProductController extends AbstractController
 
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     #[IsGranted('PRODUCT_DELETE', subject: 'product')]
-    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Product $product, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($product);
-            $entityManager->flush();
+            $em->remove($product);
+            $em->flush();
             $this->addFlash('success', 'Produit supprimé.');
         }
 
