@@ -1,134 +1,119 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de bord{% endblock %}
+{% block title %}Tableau de Bord{% endblock %}
 
 {% block body %}
-    <div class="flex justify-between items-center mb-8">
+    <div class="mb-8 flex justify-between items-end">
         <div>
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Tableau de bord</h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Vue d'ensemble de votre activité.</p>
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Tableau de Bord</h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">Aperçu de votre activité</p>
+        </div>
+        <div class="text-sm text-gray-400 font-medium">
+            {{ "now"|date("d F Y") }}
         </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        
-        {% if is_granted('ROLE_ADMIN') %}
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-purple-500 hover:shadow-md transition">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-purple-100 text-purple-600 mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Utilisateurs</p>
-                    <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ stats.users }}</p>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 flex items-center transition hover:shadow-lg">
+            <div class="p-4 rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
             </div>
-            <div class="mt-4">
-                <a href="{{ path('app_user_index') }}" class="text-sm font-medium text-purple-600 hover:text-purple-800">
-                    Gérer les accès &rarr;
-                </a>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-blue-500 hover:shadow-md transition">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Produits</p>
-                    <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ stats.products }}</p>
-                </div>
-            </div>
-            <div class="mt-4">
-                <a href="{{ path('app_product_index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-800">
-                    Voir le catalogue &rarr;
-                </a>
+            <div>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-wider">Clients</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ stats.clients }}</p>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border-l-4 border-green-500 hover:shadow-md transition">
-            <div class="flex items-center">
-                <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                </div>
-                <div>
-                    <p class="text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">Clients</p>
-                    <p class="text-2xl font-bold text-gray-800 dark:text-white">{{ stats.clients }}</p>
-                </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 flex items-center transition hover:shadow-lg">
+            <div class="p-4 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
             </div>
-            <div class="mt-4">
-                <a href="{{ path('app_client_index') }}" class="text-sm font-medium text-green-600 hover:text-green-800">
-                    Gérer les clients &rarr;
-                </a>
+            <div>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-wider">Produits</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ stats.products }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 border border-gray-100 dark:border-gray-700 flex items-center transition hover:shadow-lg">
+            <div class="p-4 rounded-full bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-300 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-bold uppercase tracking-wider">Utilisateurs</p>
+                <p class="text-3xl font-bold text-gray-800 dark:text-white">{{ stats.users }}</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
-            <h3 class="font-bold text-gray-800 dark:text-white text-lg flex items-center gap-2">
-                Derniers inscrits
-            </h3>
-            <a href="{{ path('app_client_index') }}" class="text-sm font-medium text-blue-600 hover:text-blue-800 transition">
-                Voir tous les clients &rarr;
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700">
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900">
+            <h2 class="text-lg font-bold text-gray-700 dark:text-gray-200">Derniers Clients inscrits</h2>
+            <a href="{{ path('app_client_index') }}" class="text-sm text-blue-600 hover:text-blue-800 font-medium hover:underline flex items-center gap-1">
+                Voir tout
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
             </a>
         </div>
-        
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr>
-                        <th class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Client</th>
-                        <th class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider">Contact</th>
-                        <th class="px-6 py-4 bg-gray-50 dark:bg-gray-700 text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-wider text-right">#ID</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                    {% for client in latestClients %}
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <div>
-                                        <div class="text-sm font-bold text-gray-900 dark:text-white group-hover:text-blue-500 transition-colors">
-                                            {{ client.firstname }} {{ client.lastname }}
-                                        </div>
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-                                            Actif
-                                        </span>
-                                    </div>
+
+        <table class="min-w-full w-full table-auto">
+            <thead>
+                <tr class="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 uppercase text-xs leading-normal font-bold tracking-wider">
+                    <th class="py-3 px-6 text-left">Client</th>
+                    <th class="py-3 px-6 text-left">Contact</th>
+                    <th class="py-3 px-6 text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 dark:text-gray-300 text-sm font-light">
+                {% for client in latestClients %}
+                    <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        
+                        <td class="py-3 px-6 text-left whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div>
+                                    <span class="font-bold text-gray-800 dark:text-white block">{{ client.firstname }} {{ client.lastname }}</span>
+                                    <span class="text-xs text-gray-500">ID: #{{ client.id }}</span>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-600 dark:text-gray-300 flex items-center mb-1">
-                                    {{ client.email }}
-                                </div>
+                            </div>
+                        </td>
+
+                        <td class="py-3 px-6 text-left">
+                            <div class="flex flex-col">
+                                <span class="font-medium text-gray-700 dark:text-gray-300">{{ client.email }}</span>
                                 {% if client.phoneNumber %}
-                                <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                                    {{ client.phoneNumber }}
-                                </div>
+                                    <span class="text-xs text-gray-500">{{ client.phoneNumber }}</span>
                                 {% endif %}
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                #{{ client.id }}
-                            </td>
-                        </tr>
-                    {% else %}
-                        <tr>
-                            <td colspan="3" class="px-6 py-10 text-center text-gray-500 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-900">
-                                Aucun client enregistré.
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                            </div>
+                        </td>
+
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex items-center">
+                                <a href="{{ path('app_client_edit', {'id': client.id}) }}" 
+                                   class="flex items-center px-3 py-1.5 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-200 hover:translate-x-1 font-medium no-underline"
+                                   title="Modifier">
+                                    {# Taille fixée à 1rem comme les autres tableaux #}
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="width:1rem; height:1rem; margin-right:0.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                    <span class="hidden xl:inline">Edit</span>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3" class="text-center py-6 text-gray-500 italic">
+                            Aucun client enregistré récemment.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}
