@@ -18,13 +18,13 @@ class Client
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Regex('/^[a-zA-Z\s]+$/', message: 'Pas de caractères spéciaux')]
+    #[Assert\NotBlank(message: 'Le prénom est obligatoire')]
+    #[Assert\Length(min: 2, minMessage: 'Le prénom doit faire au moins 2 caractères')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Regex('/^[a-zA-Z\s]+$/', message: 'Pas de caractères spéciaux')]
+    #[Assert\NotBlank(message: 'Le nom est obligatoire')]
+    #[Assert\Length(min: 2, minMessage: 'Le nom doit faire au moins 2 caractères')]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, unique: true)]
