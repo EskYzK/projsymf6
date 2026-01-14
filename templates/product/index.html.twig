@@ -28,31 +28,16 @@
                 <tr class="bg-gray-50 dark:bg-gray-900 text-gray-600 dark:text-gray-400 uppercase text-xs leading-normal font-bold tracking-wider">
                     <th class="py-3 px-6 text-left">Produit</th>
                     <th class="py-3 px-6 text-left">Prix</th>
-                    <th class="py-3 px-6 text-center">État / Stock</th> {# <-- Titre centré #}
-                    <th class="py-3 px-6 text-center">Actions</th>      {# <-- Titre centré #}
+                    <th class="py-3 px-6 text-center">État / Stock</th>
+                    <th class="py-3 px-6 text-center">Actions</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 dark:text-gray-300 text-sm font-light">
                 {% for product in products %}
                     <tr class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         
-                        {# 1. Produit #}
                         <td class="py-3 px-6 text-left whitespace-nowrap">
                             <div class="flex items-center">
-                                <div class="mr-3">
-                                    <div class="h-10 w-10 rounded-full flex items-center justify-center shadow-sm
-                                        {{ product.type == 'physique' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300' : 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300' }}">
-                                        {% if product.type == 'physique' %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" style="width:1.25rem; height:1.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                            </svg>
-                                        {% else %}
-                                            <svg xmlns="http://www.w3.org/2000/svg" style="width:1.25rem; height:1.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" />
-                                            </svg>
-                                        {% endif %}
-                                    </div>
-                                </div>
                                 <div>
                                     <span class="font-bold text-gray-800 dark:text-white block text-sm">{{ product.name }}</span>
                                     <span class="text-xs text-gray-500 dark:text-gray-400 block truncate max-w-[200px]">{{ product.description }}</span>
@@ -60,14 +45,12 @@
                             </div>
                         </td>
 
-                        {# 2. Prix #}
                         <td class="py-3 px-6 text-left font-mono font-medium text-gray-700 dark:text-gray-300">
                             {{ product.price }} €
                         </td>
 
-                        {# 3. État / Stock (CORRECTION ALIGNEMENT) #}
                         <td class="py-3 px-6 text-center">
-                            <div class="flex justify-center"> {# <-- Conteneur Flex pour centrer #}
+                            <div class="flex ">
                                 {% if product.type == 'physique' %}
                                     {% if product.stock > 0 %}
                                         <span class="inline-block py-1 px-3 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
@@ -86,9 +69,8 @@
                             </div>
                         </td>
 
-                        {# 4. Actions (CORRECTION ALIGNEMENT) #}
                         <td class="py-3 px-6 text-center">
-                            <div class="flex items-center justify-center gap-2"> {# <-- justify-center #}
+                            <div class="flex items-center gap-2">
                                 
                                 <a href="{{ path('app_product_edit', {'id': product.id}) }}" 
                                    class="flex items-center px-3 py-1.5 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-200 hover:translate-x-1 font-medium no-underline"

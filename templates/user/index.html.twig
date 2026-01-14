@@ -37,7 +37,7 @@
                             {{ user.email }}
                         </td>
 
-                        <td class="py-3 px-6 text-center">
+                        <td class="py-3 px-6">
                             {% for role in user.roles %}
                                 <span class="inline-block py-1 px-3 rounded-full text-xs font-bold
                                     {{ role == 'ROLE_ADMIN' ? 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300' : 
@@ -48,7 +48,7 @@
                         </td>
 
                         <td class="py-3 px-6">
-                            <div class="flex item-center justify-end gap-2">
+                            <div class="flex item-center gap-2">
                                 <a href="{{ path('app_user_edit', {'id': user.id}) }}" 
                                    class="flex items-center px-3 py-1.5 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-200 hover:translate-x-1 font-medium no-underline"
                                    title="Modifier">
