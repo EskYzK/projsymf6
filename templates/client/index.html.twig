@@ -59,7 +59,6 @@
                                 <span class="text-gray-400 italic text-xs">Non renseignée</span>
                             {% endif %}
                         </td>
-                        {% is_granted('ROLE_ADMIN') %}
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center gap-2">
                                 
@@ -84,7 +83,6 @@
 
                             </div>
                         </td>
-                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>

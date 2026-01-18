@@ -38,7 +38,9 @@
                     <th class="py-3 px-6 text-left">Produit</th>
                     <th class="py-3 px-6 text-left">Prix</th>
                     <th class="py-3 px-6 text-center">État / Stock</th>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <th class="py-3 px-6 text-center">Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody class="text-gray-600 dark:text-gray-300 text-sm font-light">
@@ -71,8 +73,8 @@
                             {{ product.price }} €
                         </td>
 
-                        <td class="py-3 px-6 text-center">
-                            <div class="flex justify-center">
+                        <td class="py-3 px-6">
+                            <div class="flex">
                                 {% if product.type == 'physique' %}
                                     {% if product.stock > 0 %}
                                         <span class="inline-block py-1 px-3 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
@@ -90,7 +92,7 @@
                                 {% endif %}
                             </div>
                         </td>
-
+                        {% if is_granted('ROLE_ADMIN') %}
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center justify-center gap-2">
                                 <a href="{{ path('app_product_edit', {'id': product.id}) }}" 
@@ -112,6 +114,7 @@
                                 </form>
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>
