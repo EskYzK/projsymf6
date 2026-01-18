@@ -48,8 +48,9 @@ class ImportProductsCommand extends Command
                 $product->setName($data[0]);
                 $product->setDescription($data[1]);
                 $product->setPrice((float) str_replace(',', '.', $data[2]));
-                $product->setType('physique');
-                $product->setStock(0);
+                $product->setType($data[3]);
+                if($data[3]=="physique" || $data[3]=="physique"){$product->setStock($data[4]);}
+                
 
                 $this->entityManager->persist($product);
                 $count++;

@@ -117,6 +117,10 @@ public/import.csv
 
 Il doit porter ce nom pour pouvoir être détecter.
 
+L'ordre des colonnes doit être le suivant :
+
+nom, description, prix, type et stock (si le produit est physique)
+
 # php bin/console app:create-client
 
 Cette commande lancera directement dans le terminal un mini formulaire de terminal permettant la création complete d'un client
