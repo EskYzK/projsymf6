@@ -139,6 +139,8 @@ La cohérence de l'entité Product.
 
 # 🎥 Démonstration
 
+[![Regarder la vidéo](https://img.youtube.com/vi/ID_VIDEO/0.jpg)](https://youtu.be/UQVbeGpXGlE)
+
 -------------- Fin --------------
 
 Courage pour les corrections
