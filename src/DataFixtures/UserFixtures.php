@@ -31,7 +31,6 @@ class UserFixtures extends Fixture
             $user->setLastname($userData['lastname']);
             $user->setRoles($userData['role']);
 
-            // On hash le mot de passe
             $password = $this->hasher->hashPassword($user, 'password');
             $user->setPassword($password);
 

@@ -10,13 +10,12 @@ class ProductFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             $product = new Product();
             $product->setName('Produit ' . $i);
             $product->setDescription('Description du produit ' . $i);
             $product->setPrice(mt_rand(1000, 10000) / 100);
 
-            // Aléatoire entre Physique et Numérique
             if (mt_rand(0, 1)) {
                 $product->setType('physique');
                 $product->setStock(mt_rand(0, 100));
