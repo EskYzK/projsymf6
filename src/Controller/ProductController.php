@@ -251,9 +251,20 @@ class ProductController extends AbstractController
         }
     }
 
-    #[Route('/export/csv', name: 'app_product_export')]
-    public function export(CsvExporter $csvExporter): Response
+    #[Route('/export/csv', name: 'app_product_export', methods: ['GET'])]
+    public function export(Request $request, CsvExporter $csvExporter): Response
     {
-        return $csvExporter->exportProducts();
+        $sort = $request->query->get('sort', 'name_asc');
+
+        $sortMapping = [
+            'name_asc'   => ['name' => 'ASC'],
+            'name_desc'  => ['name' => 'DESC'],
+            'price_asc'  => ['price' => 'ASC'],
+            'price_desc' => ['price' => 'DESC'],
+        ];
+
+        $orderBy = $sortMapping[$sort] ?? $sortMapping['name_asc'];
+
+        return $csvExporter->exportProducts($orderBy);
     }
 }

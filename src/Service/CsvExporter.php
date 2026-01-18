@@ -11,9 +11,9 @@ class CsvExporter
     {
     }
 
-    public function exportProducts(): StreamedResponse
+    public function exportProducts(array $orderBy = ['name' => 'ASC']): StreamedResponse
     {
-        $products = $this->productRepository->findAll();
+        $products = $this->productRepository->findBy([], $orderBy);
 
         $response = new StreamedResponse(function () use ($products) {
             $handle = fopen('php://output', 'w');

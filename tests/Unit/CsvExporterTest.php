@@ -15,7 +15,8 @@ class CsvExporterTest extends TestCase
         $productRepositoryMock = $this->createMock(ProductRepository::class);
 
         $productRepositoryMock->expects($this->once())
-            ->method('findAllOrderedByPrice')
+            ->method('findBy')
+            ->with([], ['name' => 'ASC'])
             ->willReturn([
                 (new Product())->setName('P1')->setPrice(10),
                 (new Product())->setName('P2')->setPrice(20),
