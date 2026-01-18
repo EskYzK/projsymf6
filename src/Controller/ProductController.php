@@ -23,10 +23,23 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class ProductController extends AbstractController
 {
     #[Route('/', name: 'app_product_index', methods: ['GET'])]
-    public function index(ProductRepository $productRepository): Response
+    public function index(Request $request, ProductRepository $productRepository): Response
     {
+        $sort = $request->query->get('sort', 'name_asc');
+
+        $sortMapping = [
+            'name_asc'   => ['name' => 'ASC'],
+            'name_desc'  => ['name' => 'DESC'],
+            'price_asc'  => ['price' => 'ASC'],
+            'price_desc' => ['price' => 'DESC'],
+        ];
+
+        $orderBy = $sortMapping[$sort] ?? $sortMapping['name_asc'];
+        $products = $productRepository->findBy([], $orderBy);
+
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $products,
+            'currentSort' => $sort,
         ]);
     }
 

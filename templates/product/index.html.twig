@@ -3,10 +3,20 @@
 {% block title %}Gestion des Produits{% endblock %}
 
 {% block body %}
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
         <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Nos Produits</h1>
         
-        <div class="flex gap-3">
+        <div class="flex flex-wrap items-center gap-3">
+            <form method="get" action="{{ path('app_product_index') }}" class="relative">
+                <select name="sort" onchange="this.form.submit()" 
+                        class="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 py-2 pl-4 pr-10 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm font-medium cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <option value="name_asc" {{ currentSort == 'name_asc' ? 'selected' : '' }}>Nom (A-Z)</option>
+                    <option value="name_desc" {{ currentSort == 'name_desc' ? 'selected' : '' }}>Nom (Z-A)</option>
+                    <option value="price_asc" {{ currentSort == 'price_asc' ? 'selected' : '' }}>Prix (Croissant)</option>
+                    <option value="price_desc" {{ currentSort == 'price_desc' ? 'selected' : '' }}>Prix (Décroissant)</option>
+                </select>
+            </form>
+
             <a href="{{ path('app_product_export') }}" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded shadow hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2 text-sm no-underline">
                 <svg xmlns="http://www.w3.org/2000/svg" style="width:1rem; height:1rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" />
@@ -29,9 +39,7 @@
                     <th class="py-3 px-6 text-left">Produit</th>
                     <th class="py-3 px-6 text-left">Prix</th>
                     <th class="py-3 px-6 text-center">État / Stock</th>
-                    {% if is_granted('ROLE_ADMIN') %}
                     <th class="py-3 px-6 text-center">Actions</th>
-                    {% endif %}
                 </tr>
             </thead>
             <tbody class="text-gray-600 dark:text-gray-300 text-sm font-light">
@@ -40,6 +48,20 @@
                         
                         <td class="py-3 px-6 text-left whitespace-nowrap">
                             <div class="flex items-center">
+                                <div class="mr-3">
+                                    <div class="h-10 w-10 rounded-full flex items-center justify-center shadow-sm
+                                        {{ product.type == 'physique' ? 'bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300' : 'bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-300' }}">
+                                        {% if product.type == 'physique' %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="width:1.25rem; height:1.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                            </svg>
+                                        {% else %}
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="width:1.25rem; height:1.25rem;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" />
+                                            </svg>
+                                        {% endif %}
+                                    </div>
+                                </div>
                                 <div>
                                     <span class="font-bold text-gray-800 dark:text-white block text-sm">{{ product.name }}</span>
                                     <span class="text-xs text-gray-500 dark:text-gray-400 block truncate max-w-[200px]">{{ product.description }}</span>
@@ -52,7 +74,7 @@
                         </td>
 
                         <td class="py-3 px-6 text-center">
-                            <div class="flex ">
+                            <div class="flex justify-center">
                                 {% if product.type == 'physique' %}
                                     {% if product.stock > 0 %}
                                         <span class="inline-block py-1 px-3 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300">
@@ -71,9 +93,9 @@
                             </div>
                         </td>
 
-                        {% if is_granted('ROLE_ADMIN') %}
                         <td class="py-3 px-6 text-center">
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center justify-center gap-2">
+                                
                                 <a href="{{ path('app_product_edit', {'id': product.id}) }}" 
                                    class="flex items-center px-3 py-1.5 rounded-lg text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-200 hover:translate-x-1 font-medium no-underline"
                                    title="Modifier">
@@ -82,6 +104,7 @@
                                     </svg>
                                     <span class="hidden md:inline">Edit</span>
                                 </a>
+
                                 <form method="post" action="{{ path('app_product_delete', {'id': product.id}) }}" onsubmit="return confirm('Supprimer ce produit ?');" style="margin:0;">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ product.id) }}">
                                     <button class="flex items-center px-3 py-1.5 rounded-lg text-red-400 hover:bg-gray-700 hover:text-red-200 transition-all duration-200 hover:translate-x-1 font-medium border-none bg-transparent cursor-pointer" title="Supprimer">
@@ -93,8 +116,6 @@
                                 </form>
                             </div>
                         </td>
-                        {% endif %}
-
                     </tr>
                 {% else %}
                     <tr>
