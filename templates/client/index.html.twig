@@ -21,7 +21,9 @@
                     <th class="py-3 px-6 text-left">Client</th>
                     <th class="py-3 px-6 text-left">Contact</th>
                     <th class="py-3 px-6 text-left">Adresse</th>
-                    <th class="py-3 px-6 text-center">Actions</th> {# Centré #}
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <th class="py-3 px-6 text-center">Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody class="text-gray-600 dark:text-gray-300 text-sm font-light">
@@ -57,7 +59,7 @@
                                 <span class="text-gray-400 italic text-xs">Non renseignée</span>
                             {% endif %}
                         </td>
-
+                        {% is_granted('ROLE_ADMIN') %}
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center gap-2">
                                 
@@ -82,6 +84,7 @@
 
                             </div>
                         </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr>

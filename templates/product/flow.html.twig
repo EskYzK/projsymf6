@@ -33,13 +33,12 @@
 
                 <div class="flex justify-between mt-8 pt-6 border-t border-gray-100">
                     {% if currentStep > 1 %}
-                        {# Le value="back" permet de revenir en arrière #}
                         <button type="submit" name="flow_product_flow_transition" value="back" formnovalidate 
                                 class="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50 transition">
                             &larr; Précédent
                         </button>
                     {% else %}
-                        <div></div> {# Espace vide pour garder l'alignement #}
+                        <div></div>
                     {% endif %}
 
                     <button type="submit" 
