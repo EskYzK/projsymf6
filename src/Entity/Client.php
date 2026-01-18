@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert; 
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé par un autre client.')]
 #[ORM\HasLifecycleCallbacks]
@@ -20,15 +21,24 @@ class Client
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le prénom est obligatoire')]
     #[Assert\Length(min: 2, minMessage: 'Le prénom doit faire au moins 2 caractères')]
+    #[Assert\Regex(
+        pattern: '/^[\p{L}\s-]+$/u',
+        message: 'Le prénom ne doit contenir que des lettres, des tirets ou des espaces'
+    )]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Le nom est obligatoire')]
     #[Assert\Length(min: 2, minMessage: 'Le nom doit faire au moins 2 caractères')]
+    #[Assert\Regex(
+        pattern: '/^[\p{L}\s-]+$/u',
+        message: 'Le nom ne doit contenir que des lettres, des tirets ou des espaces'
+    )]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Assert\Email(message: 'Format email invalide')]
+    #[Assert\NotBlank(message: "L'email est obligatoire")]
+    #[Assert\Email(message: "Le format de l'email n'est pas valide (ex: contact@domaine.com)")]
     private ?string $email = null;
 
     #[ORM\Column(length: 20)]
